@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "841619736296",
+    "project_id": "canchita-app-7e55c",
+    "storage_bucket": "canchita-app-7e55c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:841619736296:android:39aac2751e3e28688b6b5d",
+        "android_client_info": {
+          "package_name": "com.example.sintetico"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjMkI0Oay6iYK0LZZVkgrE6nV6Q6AUfSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
