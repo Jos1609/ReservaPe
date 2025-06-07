@@ -1,0 +1,29 @@
+2025/06/03-23:32:48.936 443c Creating DB C:\Users\71139\AppData\Local\Temp\flutter_tools.9a80afbb\flutter_tools_chrome_device.6799c94e\Default\IndexedDB\https_www.netacad.com_0.indexeddb.leveldb since it was missing.
+2025/06/03-23:32:48.947 443c Reusing MANIFEST C:\Users\71139\AppData\Local\Temp\flutter_tools.9a80afbb\flutter_tools_chrome_device.6799c94e\Default\IndexedDB\https_www.netacad.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/06/03-23:32:50.071 38b8 Level-0 table #5: started
+2025/06/03-23:32:50.075 38b8 Level-0 table #5: 1657 bytes OK
+2025/06/03-23:32:50.078 38b8 Delete type=0 #3
+2025/06/03-23:32:50.079 14f0 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/06/03-23:32:53.846 38b8 Level-0 table #7: started
+2025/06/03-23:32:53.850 38b8 Level-0 table #7: 1653 bytes OK
+2025/06/03-23:32:53.853 38b8 Delete type=0 #4
+2025/06/03-23:32:53.854 14f0 Manual compaction at level-0 from '\x00\x02\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x03\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/06/03-23:32:56.171 443c Level-0 table #9: started
+2025/06/03-23:32:56.213 443c Level-0 table #9: 1576 bytes OK
+2025/06/03-23:32:56.284 443c Delete type=0 #6
+2025/06/03-23:32:56.285 443c Manual compaction at level-0 from (begin) .. (end); will stop at '\x00\x03\x01\x02\x01\x14\x00a\x00p\x00o\x00l\x00l\x00o\x00-\x00c\x00a\x00c\x00h\x00e\x00-\x00p\x00e\x00r\x00s\x00i\x00s\x00t' @ 287 : 1
+2025/06/03-23:32:56.285 443c Compacting 1@0 + 1@1 files
+2025/06/03-23:32:56.341 443c Generated table #10@0: 79 keys, 1225 bytes
+2025/06/03-23:32:56.341 443c Compacted 1@0 + 1@1 files => 1225 bytes
+2025/06/03-23:32:56.407 443c compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/06/03-23:32:56.408 443c Delete type=2 #7
+2025/06/03-23:32:56.409 443c Delete type=2 #9
+2025/06/03-23:32:56.411 443c Manual compaction at level-0 from '\x00\x03\x01\x02\x01\x14\x00a\x00p\x00o\x00l\x00l\x00o\x00-\x00c\x00a\x00c\x00h\x00e\x00-\x00p\x00e\x00r\x00s\x00i\x00s\x00t' @ 287 : 1 .. (end); will stop at (end)
+2025/06/03-23:32:56.411 443c Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x03\x00\x00\xc8 \x00l\x00o\x00c\x00a\x00l\x00-\x00f\x00o\x00r\x00a\x00g\x00e\x00-\x00d\x00e\x00t\x00e\x00c\x00t\x00-\x00b\x00l\x00o\x00b\x00-\x00s\x00u\x00p\x00p\x00o\x00r\x00t' @ 249 : 1
+2025/06/03-23:32:56.411 443c Compacting 1@1 + 1@2 files
+2025/06/03-23:32:56.520 443c Generated table #11@1: 27 keys, 762 bytes
+2025/06/03-23:32:56.521 443c Compacted 1@1 + 1@2 files => 762 bytes
+2025/06/03-23:32:56.547 443c compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/06/03-23:32:56.548 443c Delete type=2 #5
+2025/06/03-23:32:56.548 443c Delete type=2 #10
+2025/06/03-23:32:56.550 443c Manual compaction at level-1 from '\x00\x03\x00\x00\xc8 \x00l\x00o\x00c\x00a\x00l\x00-\x00f\x00o\x00r\x00a\x00g\x00e\x00-\x00d\x00e\x00t\x00e\x00c\x00t\x00-\x00b\x00l\x00o\x00b\x00-\x00s\x00u\x00p\x00p\x00o\x00r\x00t' @ 249 : 1 .. (end); will stop at (end)
