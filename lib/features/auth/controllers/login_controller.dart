@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sintetico/features/auth/components/register_screen.dart';
-import 'package:sintetico/views/empresa/home_view_empresa.dart';
-import 'package:sintetico/views/home_view.dart';
 import '../services/auth_service.dart';
 
 class LoginController extends ChangeNotifier {
@@ -88,9 +85,11 @@ class LoginController extends ChangeNotifier {
       // Solo si la autenticación fue exitosa
       if (authResult != null && authResult['success'] == true) {
         // Cerrar el diálogo de login primero
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
         
         // Redirigir según el rol
+        // ignore: use_build_context_synchronously
         _redirectBasedOnRole(context, authResult['userCollection']);
       }
       // Si authResult es null, errorMessage ya se actualizó dentro de authenticateUser()
@@ -106,11 +105,10 @@ class LoginController extends ChangeNotifier {
         Navigator.of(context).pushReplacementNamed(
           '/empresa_dashboard');
         break; 
-      /*case 'Cliente':
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) =>  RegisterModal()),
-        );
-        break;*/
+      case 'clients':
+        Navigator.of(context).pushReplacementNamed(
+          '/cliente_dashboard');
+        break;
       
     }
   }

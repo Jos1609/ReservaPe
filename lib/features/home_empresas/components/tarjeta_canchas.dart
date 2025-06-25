@@ -1,11 +1,11 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sintetico/config/theme/colors.dart';
 import 'package:sintetico/config/theme/dimensions.dart';
 import 'package:sintetico/config/theme/text_styles.dart';
+import 'package:sintetico/features/detalle_cancha/components/carrusel_imagenes.dart';
 import 'package:sintetico/models/cancha.dart';
 
-class FieldCard extends StatelessWidget {
+class FieldCard extends StatefulWidget {
   final CourtModel court;
   final VoidCallback? onEdit;
   final VoidCallback? onViewReservations;
@@ -18,6 +18,13 @@ class FieldCard extends StatelessWidget {
   });
 
   @override
+  State<FieldCard> createState() => _FieldCardState();
+}
+
+class _FieldCardState extends State<FieldCard> {
+  int _currentPhotoIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       elevation: AppDimensions.cardElevation,
@@ -26,44 +33,56 @@ class FieldCard extends StatelessWidget {
       ),
       margin: const EdgeInsets.all(12),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // 👈 ESTO es la clave
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Imagen o placeholder
-          Container(
+          // Usar el componente CourtImageCarousel
+          SizedBox(
             height: 160,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: CourtImageCarousel(
+                images: widget.court.photos,
+                currentIndex: _currentPhotoIndex,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentPhotoIndex = index;
+                  });
+                },
+              ),
             ),
-            child: court.photos.isNotEmpty
-                ? ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                    child: Image.file(
-                      File(court.photos.first),
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : const Center(child: Icon(Icons.sports_soccer, size: 48, color: Colors.grey)),
           ),
-
-          // Contenido
+          
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             child: Column(
-              mainAxisSize: MainAxisSize.min, // 👈 IMPORTANTE también aquí
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  court.name,
-                  style: AppTextStyles.heading3(context).copyWith(fontWeight: FontWeight.bold),
+                  widget.court.name,
+                  style: AppTextStyles.heading3(context)
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    Expanded(child: _InfoColumn(label: 'Tamaño', value: '${court.teamCapacity} vs ${court.teamCapacity}')),
-                    Expanded(child: _InfoColumn(label: 'Precio/H', value: 'S/ ${court.dayPrice.toStringAsFixed(0)}')),
-                    Expanded(child: _InfoColumn(label: 'Cubierta', value: court.hasRoof ? 'Sí' : 'No')),
+                    Expanded(
+                        child: _InfoColumn(
+                            label: 'Tamaño',
+                            value:
+                                '${widget.court.teamCapacity} vs ${widget.court.teamCapacity}')),
+                    Expanded(
+                        child: _InfoColumn(
+                            label: 'Precio/H',
+                            value:
+                                'S/ ${widget.court.dayPrice.toStringAsFixed(0)}')),
+                    Expanded(
+                        child: _InfoColumn(
+                            label: 'Techo',
+                            value: widget.court.hasRoof ? 'Sí' : 'No')),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -71,23 +90,29 @@ class FieldCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: onViewReservations,
+                        onPressed: widget.onViewReservations,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: onViewReservations == null ? Colors.grey[300] : AppColors.success,
-                          foregroundColor: onViewReservations == null ? Colors.grey : Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          backgroundColor: widget.onViewReservations == null
+                              ? Colors.grey[300]
+                              : AppColors.success,
+                          foregroundColor: widget.onViewReservations == null
+                              ? Colors.grey
+                              : Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
-                        child: const Text('Ver Reservas'),
+                        child: const Text('Reservas'),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: onEdit,
+                        onPressed: widget.onEdit,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
                         child: const Text('Editar'),
                       ),
@@ -114,9 +139,13 @@ class _InfoColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.caption(context).copyWith(color: AppColors.textSecondary)),
+        Text(label,
+            style: AppTextStyles.caption(context)
+                .copyWith(color: AppColors.textSecondary)),
         const SizedBox(height: 4),
-        Text(value, style: AppTextStyles.body(context).copyWith(fontWeight: FontWeight.w600)),
+        Text(value,
+            style: AppTextStyles.body(context)
+                .copyWith(fontWeight: FontWeight.w600)),
       ],
     );
   }

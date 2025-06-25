@@ -7,13 +7,14 @@ class ReservationModel {
   final String clientName;
   final String clientPhone;
   final String clientAvatarUrl;
+  final String? clientId; // Added optional clientId
   final DateTime startTime;
   final DateTime endTime;
   final double totalPrice;
   final String status;
   final String? cancellationReason;
-  final String comprobantePago; // URL de la foto del comprobante de pago
-  final List<String> metodosPago; // Lista de métodos de pago
+  final String comprobantePago;
+  final List<String> metodosPago;
 
   ReservationModel({
     required this.id,
@@ -21,6 +22,7 @@ class ReservationModel {
     required this.clientName,
     required this.clientPhone,
     required this.clientAvatarUrl,
+    this.clientId, // Added to constructor
     required this.startTime,
     required this.endTime,
     required this.totalPrice,
@@ -37,6 +39,7 @@ class ReservationModel {
       clientName: data['clientName'] ?? '',
       clientPhone: data['clientPhone'] ?? '',
       clientAvatarUrl: data['clientAvatarUrl'] ?? '',
+      clientId: data['clientId'], // Added to fromMap
       startTime: (data['startTime'] as Timestamp).toDate(),
       endTime: (data['endTime'] as Timestamp).toDate(),
       totalPrice: (data['totalPrice'] ?? 0.0).toDouble(),
@@ -53,6 +56,7 @@ class ReservationModel {
       'clientName': clientName,
       'clientPhone': clientPhone,
       'clientAvatarUrl': clientAvatarUrl,
+      if (clientId != null) 'clientId': clientId, // Added to toMap
       'startTime': Timestamp.fromDate(startTime),
       'endTime': Timestamp.fromDate(endTime),
       'totalPrice': totalPrice,
@@ -63,28 +67,23 @@ class ReservationModel {
     };
   }
 
-  // Método para calcular el precio total basado en horarios diurnos y nocturnos
   static double calculateTotalPrice({
     required DateTime startTime,
     required DateTime endTime,
     required CourtModel court,
   }) {
-    const int dayStartHour = 6; // 6:00 AM - Inicio del horario diurno
-    const int nightStartHour = 18; // 6:00 PM - Inicio del horario nocturno
+    const int dayStartHour = 6;
+    const int nightStartHour = 18;
 
     double totalPrice = 0.0;
     double hours = endTime.difference(startTime).inMinutes / 60.0;
 
-    // Determinar si la reserva es completamente diurna, nocturna o mixta
     final startHour = startTime.hour;
     if (startHour >= dayStartHour && startHour < nightStartHour) {
-      // Comienza en horario diurno
       final endHour = endTime.hour;
       if (endHour < nightStartHour) {
-        // Toda la reserva es diurna
         totalPrice = hours * court.dayPrice;
       } else {
-        // Reserva mixta: parte diurna y parte nocturna
         final diurnalEnd = DateTime(
           startTime.year,
           startTime.month,
@@ -99,7 +98,6 @@ class ReservationModel {
             (nocturnalHours * court.nightPrice);
       }
     } else {
-      // Comienza en horario nocturno
       totalPrice = hours * court.nightPrice;
     }
 

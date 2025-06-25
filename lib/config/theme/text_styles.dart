@@ -88,4 +88,106 @@ class AppTextStyles {
     color: AppColors.textSecondary,
   );
 }
+
+ static final heading1card = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w700,
+    color: AppColors.dark,
+  );
+
+  static final heading2card = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w700,
+    color: AppColors.dark,
+  );
+
+  static final heading3card = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+    color: AppColors.dark,
+  );
+
+  static final bodycard = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.dark,
+  );
+
+  static final bodyBoldcard = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: AppColors.dark,
+  );
+
+  static final captioncard = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: AppColors.dark,
+  );
+
+  static const TextStyle h1 = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+    color: AppColors.textPrimary,
+    height: 1.2,
+  );
+  
+  static const TextStyle h2 = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: AppColors.textPrimary,
+    height: 1.3,
+  );
+  
+  static const TextStyle h3 = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+    height: 1.4,
+  );
+  
+  // Cuerpo de texto
+  static const TextStyle body1 = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+    color: AppColors.textPrimary,
+    height: 1.5,
+  );
+  
+  static const TextStyle body2 = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+    color: AppColors.textPrimary,
+    height: 1.5,
+  );
+  
+  // Otros estilos
+  static const TextStyle button1 = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+    letterSpacing: 0.5,
+  );
+  
+  static const TextStyle caption1 = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+    color: AppColors.textSecondary,
+    height: 1.4,
+  );
+  
+  static const TextStyle overline = TextStyle(
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textSecondary,
+    letterSpacing: 1.5,
+  );
+
+  static const TextStyle caption2 = TextStyle(
+ fontSize: 10,
+ fontWeight: FontWeight.w400,
+ height: 1.2,
+ letterSpacing: 0.4,
+);
+
 }

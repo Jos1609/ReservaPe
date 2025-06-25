@@ -61,7 +61,9 @@ class _RegisterCompanyModalContent extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
+                      // ignore: deprecated_member_use
                       AppColors.primary.withOpacity(0.1),
+                      // ignore: deprecated_member_use
                       AppColors.primary.withOpacity(0.05),
                     ],
                   ),
@@ -99,7 +101,9 @@ class _RegisterCompanyModalContent extends StatelessWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
+                              // ignore: deprecated_member_use
                               AppColors.primary.withOpacity(0.1),
+                              // ignore: deprecated_member_use
                               AppColors.primary.withOpacity(0.05),
                             ],
                           ),
@@ -112,6 +116,7 @@ class _RegisterCompanyModalContent extends StatelessWidget {
                               padding: const EdgeInsets.all(
                                   AppDimensions.paddingMedium),
                               decoration: BoxDecoration(
+                                // ignore: deprecated_member_use
                                 color: AppColors.primary.withOpacity(0.1),
                                 shape: BoxShape.circle,
                               ),
@@ -203,6 +208,7 @@ class _RegisterCompanyModalContent extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(
                                         AppDimensions.radiusSmall),
                                     borderSide: BorderSide(
+                                        // ignore: deprecated_member_use
                                         color: AppColors.gray.withOpacity(0.3)),
                                   ),
                                 ),
@@ -447,6 +453,7 @@ class _RegisterCompanyModalContent extends StatelessWidget {
                                 padding: const EdgeInsets.all(
                                     AppDimensions.paddingMedium),
                                 decoration: BoxDecoration(
+                                  // ignore: deprecated_member_use
                                   color: AppColors.primary.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(
                                       AppDimensions.radiusSmall),
@@ -478,10 +485,12 @@ class _RegisterCompanyModalContent extends StatelessWidget {
                                 padding: const EdgeInsets.all(
                                     AppDimensions.paddingMedium),
                                 decoration: BoxDecoration(
+                                  // ignore: deprecated_member_use
                                   color: AppColors.error.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(
                                       AppDimensions.radiusSmall),
                                   border: Border.all(
+                                      // ignore: deprecated_member_use
                                       color: AppColors.error.withOpacity(0.3)),
                                 ),
                                 child: Row(
@@ -508,6 +517,7 @@ class _RegisterCompanyModalContent extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
+                                      // ignore: deprecated_member_use
                                       color: AppColors.primary.withOpacity(0.3),
                                       blurRadius: 10,
                                       spreadRadius: 2,
@@ -551,11 +561,14 @@ class _RegisterCompanyModalContent extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
+            // ignore: deprecated_member_use
             AppColors.primary.withOpacity(0.1),
+            // ignore: deprecated_member_use
             AppColors.primary.withOpacity(0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusSmall),
+        // ignore: deprecated_member_use
         border: Border.all(color: AppColors.primary.withOpacity(0.2)),
       ),
       child: Row(
@@ -575,6 +588,7 @@ class _RegisterCompanyModalContent extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppDimensions.radiusSmall),
         gradient: LinearGradient(
           colors: [
+            // ignore: deprecated_member_use
             AppColors.primary.withOpacity(0.1),
             Colors.transparent,
           ],

@@ -1,4 +1,3 @@
-// lib/features/authentication/models/company_model.dart
 class CompanyModel {
   final String id;
   final String name;
@@ -10,8 +9,8 @@ class CompanyModel {
   final String address;
   final Map<String, double> coordinates;
   final String status;
-  final String? email; // Campo opcional para correo
-  final String? phoneNumber; // Campo opcional para número de celular
+  final String? email;
+  final String? phoneNumber;
 
   CompanyModel({
     required this.id,
@@ -31,18 +30,23 @@ class CompanyModel {
   // Convertir a Map para guardar en Firestore
   Map<String, dynamic> toMap() {
     return {
-      'companyId': id,
-      'name': name,
-      'description': description,
-      'logo': logo,
-      'openingTime': openingTime,
-      'closingTime': closingTime,
-      'services': services,
-      'address': address,
-      'coordinates': coordinates,
-      'status': status,
-      'email': email,
-      'phoneNumber': phoneNumber,
+      'companyId': id.isNotEmpty ? id : throw ArgumentError('ID cannot be empty'),
+      'name': name.isNotEmpty ? name : throw ArgumentError('Name cannot be empty'),
+      'description': description.isNotEmpty ? description : '',
+      'logo': logo?.isNotEmpty == true ? logo : null,
+      'openingTime': openingTime.isNotEmpty ? openingTime : throw ArgumentError('Opening time cannot be empty'),
+      'closingTime': closingTime.isNotEmpty ? closingTime : throw ArgumentError('Closing time cannot be empty'),
+      'services': services.isNotEmpty ? services : [],
+      'address': address.isNotEmpty ? address : throw ArgumentError('Address cannot be empty'),
+      'coordinates': coordinates.isNotEmpty
+          ? {
+              'latitude': coordinates['latitude'] ?? 0.0,
+              'longitude': coordinates['longitude'] ?? 0.0,
+            }
+          : {'latitude': 0.0, 'longitude': 0.0},
+      'status': status.isNotEmpty ? status : 'Cerrado',
+      'email': email?.isNotEmpty == true ? email : null,
+      'phoneNumber': phoneNumber?.isNotEmpty == true ? phoneNumber : null,
     };
   }
 
@@ -95,23 +99,5 @@ class CompanyModel {
     } catch (e) {
       return {'latitude': 0.0, 'longitude': 0.0};
     }
-  }
-
-  // Crear instancia desde JSON
-  factory CompanyModel.fromJson(Map<String, dynamic> json) {
-    return CompanyModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      logo: json['logo'],
-      openingTime: json['openingTime'] ?? '',
-      closingTime: json['closingTime'] ?? '',
-      services: List<String>.from(json['services'] ?? []),
-      address: json['address'] ?? '',
-      coordinates: Map<String, double>.from(json['coordinates'] ?? {'latitude': 0.0, 'longitude': 0.0}),
-      status: json['status'] ?? 'Cerrado',
-      email: json['email'],
-      phoneNumber: json['phoneNumber'],
-    );
-  }
+  }  
 }

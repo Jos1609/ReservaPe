@@ -77,7 +77,9 @@ class _MapSelectionModalContentState extends State<_MapSelectionModalContent> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
+                  // ignore: deprecated_member_use
                   AppColors.primary.withOpacity(0.1),
+                  // ignore: deprecated_member_use
                   AppColors.primary.withOpacity(0.05),
                 ],
               ),
@@ -173,7 +175,9 @@ class _MapSelectionModalContentState extends State<_MapSelectionModalContent> {
                 Container(
                   padding: const EdgeInsets.all(AppDimensions.paddingMedium),
                   color: _selectedPosition != null
+                      // ignore: deprecated_member_use
                       ? AppColors.primary.withOpacity(0.1)
+                      // ignore: deprecated_member_use
                       : AppColors.gray.withOpacity(0.1),
                   child: Text(
                     _selectedPosition != null

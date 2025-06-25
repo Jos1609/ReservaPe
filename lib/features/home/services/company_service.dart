@@ -16,6 +16,7 @@ class CompanyService {
       }).toList();
       
     } catch (e) {
+      // ignore: avoid_print
       print('Error al obtener empresas: $e');
       throw Exception('No se pudieron cargar las empresas: $e');
     }

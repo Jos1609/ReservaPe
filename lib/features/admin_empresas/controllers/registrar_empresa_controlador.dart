@@ -8,7 +8,7 @@ import 'package:sintetico/features/auth/services/auth_service.dart';
 class RegisterCompanyController extends ChangeNotifier {
   final CompanyService _companyService = CompanyService();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  AuthService _authService = AuthService();
+  final AuthService _authService = AuthService();
   
   // Controladores de texto
   final TextEditingController nameController = TextEditingController();
@@ -72,6 +72,7 @@ class RegisterCompanyController extends ChangeNotifier {
       initialTime: TimeOfDay.now(),
     );
     if (picked != null) {
+      // ignore: use_build_context_synchronously
       final formattedTime = picked.format(context);
       if (isOpening) {
         openingTimeController.text = formattedTime;
@@ -146,12 +147,14 @@ class RegisterCompanyController extends ChangeNotifier {
       notifyListeners();
       
       // Mostrar mensaje de éxito
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Empresa registrada correctamente')),
       );
       
       // Esperar un momento antes de cerrar
       await Future.delayed(const Duration(milliseconds: 500));
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
       
     } catch (e) {

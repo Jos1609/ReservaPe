@@ -158,4 +158,10 @@ class AuthService {
       throw Exception('Error al crear usuario: $e');
     }
   }
+
+/// Obtiene el ID del usuario autenticado actualmente.
+  /// Retorna null si no hay usuario autenticado.
+  static String? getCurrentUserId() {
+    return FirebaseAuth.instance.currentUser?.uid;
+  }
 }

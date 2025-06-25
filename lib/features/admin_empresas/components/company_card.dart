@@ -48,7 +48,9 @@ class CompanyCard extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
+                    // ignore: deprecated_member_use
                     Colors.black.withOpacity(0.1),
+                    // ignore: deprecated_member_use
                     Colors.black.withOpacity(0.3),
                   ],
                 ),

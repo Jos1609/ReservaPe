@@ -15,6 +15,7 @@ class LoginDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) async {
     await showDialog(
       context: context,
+      // ignore: deprecated_member_use
       barrierColor: Colors.black.withOpacity(0.7),
       builder: (context) => ChangeNotifierProvider(
         create: (_) => LoginController(),
@@ -43,6 +44,7 @@ class LoginDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
               boxShadow: [
                 BoxShadow(
+                  // ignore: deprecated_member_use
                   color: Colors.black.withOpacity(0.2),
                   blurRadius: 20,
                   spreadRadius: 5,
@@ -171,6 +173,7 @@ class LoginDialog extends StatelessWidget {
                               margin: const EdgeInsets.only(bottom: AppDimensions.paddingMedium),
                               padding: const EdgeInsets.all(AppDimensions.paddingSmall),
                               decoration: BoxDecoration(
+                                // ignore: deprecated_member_use
                                 color: AppColors.error.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
                                 border: Border.all(color: AppColors.error),

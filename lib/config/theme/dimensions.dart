@@ -35,4 +35,22 @@ class AppDimensions {
   static const double spacingMedium = 12.0;
   static const double spacingLarge = 16.0;
   static const double spacingXLarge = 24.0;
+
+
+  static const double spacing = 16.0;
+  static const double padding = 16.0;
+
+  // Padding
+  static const double borderRadiusLarge = 16.0;
+  static const double borderRadiusXLarge = 24.0;
+  
+  // Elevation
+  static const double elevationSmall = 2.0;
+  static const double elevationMedium = 4.0;
+  static const double elevationLarge = 8.0;
+  
+  // Icon Sizes
+  static const double iconSizeSmall = 16.0;
+  static const double iconSizeMedium = 24.0;
+  static const double iconSizeXLarge = 48.0;
   }

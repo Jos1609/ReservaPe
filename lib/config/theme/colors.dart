@@ -30,5 +30,19 @@ class AppColors {
   // Colores de texto (si no existen)
   static const Color textPrimary = Color(0xFF212121); // Negro/gris muy oscuro
   static const Color textSecondary = Color(0xFF757575); // Gris
-
+  
+  // Colores de fondo
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color surfaceVariant = Color(0xFFF0F0F0);
+  
+  // Colores de texto
+  static const Color textDisabled = Color(0xFFBDBDBD);
+  
+  // Colores de estado
+  static const Color warning = Color(0xFFFF9800);
+  static const Color info = Color(0xFF2196F3);
+  
+  // Otros colores
+  static const Color divider = Color(0xFFE0E0E0);
+  static const Color overlay = Color(0x80000000);
 }

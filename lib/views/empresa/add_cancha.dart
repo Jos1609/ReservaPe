@@ -8,8 +8,8 @@ import 'package:sintetico/features/home_empresas/services/home_service.dart';
 import 'package:sintetico/models/cancha.dart';
 
 class AddCourtModal extends StatefulWidget {
-  final CourtModel? court; // Cancha para editar (null para crear nueva)
-  
+  final CourtModel? court;
+
   const AddCourtModal({super.key, this.court});
 
   @override
@@ -36,7 +36,8 @@ class _AddCourtModalState extends State<AddCourtModal> {
   final _teamCapacityController = TextEditingController();
   final _materialController = TextEditingController();
   bool _hasRoof = false;
-  List<XFile> _selectedImages = [];
+  List<XFile> _selectedImages = []; // Nuevas imágenes locales
+  List<String> _existingImageUrls = []; // URLs de imágenes existentes
   final ImagePicker _picker = ImagePicker();
   bool _isEditing = false;
 
@@ -58,9 +59,7 @@ class _AddCourtModalState extends State<AddCourtModal> {
     _teamCapacityController.text = court.teamCapacity.toString();
     _materialController.text = court.material;
     _hasRoof = court.hasRoof;
-    
-    // Cargar fotos existentes (convertir de String paths a XFile)
-    _selectedImages = court.photos.map((path) => XFile(path)).toList();
+    _existingImageUrls = List<String>.from(court.photos); // Cargar URLs existentes
   }
 
   @override
@@ -83,12 +82,15 @@ class _AddCourtModalState extends State<AddCourtModal> {
         );
         return;
       }
-      
-      // Convertir las imágenes a una lista de strings (paths)
-      List<String> photoPaths = _selectedImages.map((image) => image.path).toList();
-      
+
+      // Combinar URLs existentes y paths de nuevas imágenes
+      List<String> photoPaths = [
+        ..._existingImageUrls,
+        ..._selectedImages.map((xfile) => xfile.path),
+      ];
+
       final court = CourtModel(
-        id: _isEditing ? widget.court!.id : '', // Mantener ID si es edición
+        id: _isEditing ? widget.court!.id : '',
         empresaId: userId,
         name: _nameController.text,
         sportType: _sportTypeController.text,
@@ -99,23 +101,29 @@ class _AddCourtModalState extends State<AddCourtModal> {
         teamCapacity: int.parse(_teamCapacityController.text),
         material: _materialController.text,
       );
-      
+
       try {
         if (_isEditing) {
           await HomeEmpresaService.updateCourt(court);
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Cancha ${court.name} actualizada con éxito')),
           );
         } else {
           await HomeEmpresaService.addCourt(court);
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Cancha ${court.name} agregada con éxito')),
           );
         }
+        // ignore: use_build_context_synchronously
         Navigator.pop(context);
       } catch (e) {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al ${_isEditing ? 'actualizar' : 'agregar'} cancha: $e')),
+          SnackBar(
+              content:
+                  Text('Error al ${_isEditing ? 'actualizar' : 'agregar'} cancha: $e')),
         );
       }
     }
@@ -128,17 +136,19 @@ class _AddCourtModalState extends State<AddCourtModal> {
         maxHeight: 1080,
         imageQuality: 85,
       );
-      
+
       if (images.isNotEmpty) {
         setState(() {
           _selectedImages.addAll(images);
-          // Limitar a máximo 5 imágenes
-          if (_selectedImages.length > 5) {
-            _selectedImages = _selectedImages.take(5).toList();
+          // Limitar a máximo 5 imágenes en total
+          int totalImages = _selectedImages.length + _existingImageUrls.length;
+          if (totalImages > 5) {
+            _selectedImages = _selectedImages.take(5 - _existingImageUrls.length).toList();
           }
         });
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al seleccionar imágenes: $e')),
       );
@@ -153,26 +163,32 @@ class _AddCourtModalState extends State<AddCourtModal> {
         maxHeight: 1080,
         imageQuality: 85,
       );
-      
+
       if (image != null) {
         setState(() {
           _selectedImages.add(image);
-          // Limitar a máximo 5 imágenes
-          if (_selectedImages.length > 5) {
-            _selectedImages = _selectedImages.take(5).toList();
+          // Limitar a máximo 5 imágenes en total
+          int totalImages = _selectedImages.length + _existingImageUrls.length;
+          if (totalImages > 5) {
+            _selectedImages = _selectedImages.take(5 - _existingImageUrls.length).toList();
           }
         });
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al tomar foto: $e')),
       );
     }
   }
 
-  void _removeImage(int index) {
+  void _removeImage(int index, bool isExisting) {
     setState(() {
-      _selectedImages.removeAt(index);
+      if (isExisting) {
+        _existingImageUrls.removeAt(index);
+      } else {
+        _selectedImages.removeAt(index);
+      }
     });
   }
 
@@ -225,18 +241,21 @@ class _AddCourtModalState extends State<AddCourtModal> {
   }
 
   Widget _buildPhotoSection() {
+    final totalImages = _existingImageUrls.length + _selectedImages.length;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Add photo button
         InkWell(
-          onTap: _showImageOptions,
+          onTap: totalImages >= 5 ? null : _showImageOptions, // Deshabilitar si hay 5 imágenes
           borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
           child: Container(
             width: double.infinity,
             height: 120,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[300]!, width: 2, style: BorderStyle.solid),
+              border: Border.all(
+                  color: Colors.grey[300]!, width: 2, style: BorderStyle.solid),
               borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
               color: Colors.grey[50],
             ),
@@ -246,13 +265,13 @@ class _AddCourtModalState extends State<AddCourtModal> {
                 Icon(
                   Icons.add_photo_alternate_outlined,
                   size: 40,
-                  color: AppColors.primary,
+                  color: totalImages >= 5 ? Colors.grey : AppColors.primary,
                 ),
                 const SizedBox(height: AppDimensions.paddingSmall),
                 Text(
                   'Agregar fotos',
                   style: AppTextStyles.body(context).copyWith(
-                    color: AppColors.primary,
+                    color: totalImages >= 5 ? Colors.grey : AppColors.primary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -267,12 +286,12 @@ class _AddCourtModalState extends State<AddCourtModal> {
             ),
           ),
         ),
-        
-        // Selected images grid
-        if (_selectedImages.isNotEmpty) ...[
+
+        // Imágenes existentes y seleccionadas
+        if (totalImages > 0) ...[
           const SizedBox(height: AppDimensions.paddingMedium),
           Text(
-            '${_selectedImages.length} foto${_selectedImages.length > 1 ? 's' : ''} seleccionada${_selectedImages.length > 1 ? 's' : ''}',
+            '$totalImages foto${totalImages > 1 ? 's' : ''} seleccionada${totalImages > 1 ? 's' : ''}',
             style: AppTextStyles.body(context).copyWith(
               color: Colors.grey[600],
               fontSize: 12,
@@ -283,45 +302,25 @@ class _AddCourtModalState extends State<AddCourtModal> {
             height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: _selectedImages.length,
+              itemCount: totalImages,
               itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.only(
-                    right: index < _selectedImages.length - 1 ? AppDimensions.paddingSmall : 0,
-                  ),
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
-                        child: Image.file(
-                          File(_selectedImages[index].path),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        top: 4,
-                        right: 4,
-                        child: InkWell(
-                          onTap: () => _removeImage(index),
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.close,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                // Determinar si es una imagen existente o nueva
+                if (index < _existingImageUrls.length) {
+                  // Imagen existente (URL)
+                  return _buildImageItem(
+                    imageUrl: _existingImageUrls[index],
+                    isExisting: true,
+                    index: index,
+                  );
+                } else {
+                  // Nueva imagen (XFile)
+                  final newImageIndex = index - _existingImageUrls.length;
+                  return _buildImageItem(
+                    imageFile: File(_selectedImages[newImageIndex].path),
+                    isExisting: false,
+                    index: newImageIndex,
+                  );
+                }
               },
             ),
           ),
@@ -330,6 +329,67 @@ class _AddCourtModalState extends State<AddCourtModal> {
     );
   }
 
+  Widget _buildImageItem({
+    String? imageUrl,
+    File? imageFile,
+    required bool isExisting,
+    required int index,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(
+        right: index < (_existingImageUrls.length + _selectedImages.length - 1)
+            ? AppDimensions.paddingSmall
+            : 0,
+      ),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+            child: imageUrl != null
+                ? Image.network(
+                    imageUrl,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.error, color: Colors.red),
+                    ),
+                  )
+                : Image.file(
+                    imageFile!,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: InkWell(
+              onTap: () => _removeImage(index, isExisting),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Resto del código sin cambios (build, _buildSectionTitle, _buildElegantTextField)
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -348,7 +408,6 @@ class _AddCourtModalState extends State<AddCourtModal> {
         builder: (context, scrollController) {
           return Column(
             children: [
-              // Handle indicator
               Container(
                 margin: const EdgeInsets.only(top: AppDimensions.paddingSmall),
                 width: 40,
@@ -358,8 +417,6 @@ class _AddCourtModalState extends State<AddCourtModal> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
-              // Header
               Padding(
                 padding: const EdgeInsets.all(AppDimensions.paddingMedium),
                 child: Row(
@@ -381,10 +438,7 @@ class _AddCourtModalState extends State<AddCourtModal> {
                   ],
                 ),
               ),
-              
               const Divider(height: 1),
-              
-              // Form content
               Expanded(
                 child: Form(
                   key: _formKey,
@@ -392,40 +446,30 @@ class _AddCourtModalState extends State<AddCourtModal> {
                     controller: scrollController,
                     padding: const EdgeInsets.all(AppDimensions.paddingMedium),
                     children: [
-                      // Basic Information Section
                       _buildSectionTitle('Información Básica'),
                       const SizedBox(height: AppDimensions.paddingSmall),
-                      
                       _buildElegantTextField(
                         controller: _nameController,
                         label: 'Nombre de la cancha',
                         icon: Icons.sports_soccer,
-                        validator: (value) => value!.isEmpty ? 'Ingrese el nombre' : null,
+                        validator: (value) =>
+                            value!.isEmpty ? 'Ingrese el nombre' : null,
                       ),
-                      
                       const SizedBox(height: AppDimensions.paddingMedium),
-                      
                       _buildElegantTextField(
                         controller: _sportTypeController,
                         label: 'Tipo de deporte',
                         icon: Icons.sports,
-                        validator: (value) => value!.isEmpty ? 'Ingrese el tipo de deporte' : null,
+                        validator: (value) =>
+                            value!.isEmpty ? 'Ingrese el tipo de deporte' : null,
                       ),
-                      
                       const SizedBox(height: AppDimensions.paddingLarge),
-                      
-                      // Photos Section
                       _buildSectionTitle('Fotos de la cancha'),
                       const SizedBox(height: AppDimensions.paddingSmall),
-                      
                       _buildPhotoSection(),
-                      
                       const SizedBox(height: AppDimensions.paddingLarge),
-                      
-                      // Pricing Section
                       _buildSectionTitle('Precios'),
                       const SizedBox(height: AppDimensions.paddingSmall),
-                      
                       Row(
                         children: [
                           Expanded(
@@ -437,7 +481,9 @@ class _AddCourtModalState extends State<AddCourtModal> {
                               prefix: 'S/ ',
                               validator: (value) {
                                 if (value!.isEmpty) return 'Precio requerido';
-                                if (double.tryParse(value) == null) return 'Número inválido';
+                                if (double.tryParse(value) == null) {
+                                  return 'Número inválido';
+                                }
                                 return null;
                               },
                             ),
@@ -452,20 +498,18 @@ class _AddCourtModalState extends State<AddCourtModal> {
                               prefix: 'S/ ',
                               validator: (value) {
                                 if (value!.isEmpty) return 'Precio requerido';
-                                if (double.tryParse(value) == null) return 'Número inválido';
+                                if (double.tryParse(value) == null) {
+                                  return 'Número inválido';
+                                }
                                 return null;
                               },
                             ),
                           ),
                         ],
                       ),
-                      
                       const SizedBox(height: AppDimensions.paddingLarge),
-                      
-                      // Specifications Section
                       _buildSectionTitle('Especificaciones'),
                       const SizedBox(height: AppDimensions.paddingSmall),
-                      
                       Row(
                         children: [
                           Expanded(
@@ -476,7 +520,9 @@ class _AddCourtModalState extends State<AddCourtModal> {
                               keyboardType: TextInputType.number,
                               validator: (value) {
                                 if (value!.isEmpty) return 'Capacidad requerida';
-                                if (int.tryParse(value) == null) return 'Número inválido';
+                                if (int.tryParse(value) == null) {
+                                  return 'Número inválido';
+                                }
                                 return null;
                               },
                             ),
@@ -487,22 +533,22 @@ class _AddCourtModalState extends State<AddCourtModal> {
                               controller: _materialController,
                               label: 'Material',
                               icon: Icons.texture,
-                              validator: (value) => value!.isEmpty ? 'Ingrese el material' : null,
+                              validator: (value) =>
+                                  value!.isEmpty ? 'Ingrese el material' : null,
                             ),
                           ),
                         ],
                       ),
-                      
                       const SizedBox(height: AppDimensions.paddingMedium),
-                      
-                      // Roof checkbox with elegant design
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey[300]!),
-                          borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+                          borderRadius:
+                              BorderRadius.circular(AppDimensions.borderRadius),
                         ),
                         child: CheckboxListTile(
-                          title: Text('¿Tiene techo?', style: AppTextStyles.body(context)),
+                          title: Text('¿Tiene techo?',
+                              style: AppTextStyles.body(context)),
                           subtitle: Text(
                             'Indica si la cancha cuenta con techo',
                             style: AppTextStyles.body(context).copyWith(
@@ -514,18 +560,16 @@ class _AddCourtModalState extends State<AddCourtModal> {
                           onChanged: (value) => setState(() => _hasRoof = value!),
                           activeColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+                            borderRadius:
+                                BorderRadius.circular(AppDimensions.borderRadius),
                           ),
                         ),
                       ),
-                      
                       const SizedBox(height: AppDimensions.paddingLarge * 2),
                     ],
                   ),
                 ),
               ),
-              
-              // Bottom action buttons
               Container(
                 padding: const EdgeInsets.all(AppDimensions.paddingMedium),
                 decoration: BoxDecoration(
@@ -541,10 +585,12 @@ class _AddCourtModalState extends State<AddCourtModal> {
                         child: OutlinedButton(
                           onPressed: () => Navigator.pop(context),
                           style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, AppDimensions.buttonHeight),
+                            minimumSize: const Size(
+                                double.infinity, AppDimensions.buttonHeight),
                             side: BorderSide(color: Colors.grey[300]!),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+                              borderRadius: BorderRadius.circular(
+                                  AppDimensions.borderRadius),
                             ),
                           ),
                           child: Text(
@@ -561,17 +607,18 @@ class _AddCourtModalState extends State<AddCourtModal> {
                         child: ElevatedButton(
                           onPressed: _submitForm,
                           style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, AppDimensions.buttonHeight),
+                            minimumSize: const Size(
+                                double.infinity, AppDimensions.buttonHeight),
                             backgroundColor: AppColors.primary,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+                              borderRadius: BorderRadius.circular(
+                                  AppDimensions.borderRadius),
                             ),
                             elevation: 2,
                           ),
                           child: Text(
-                            _isEditing ? 'Actualizar Cancha' : 'Agregar Cancha', 
-                            style: AppTextStyles.buttonText
-                          ),
+                              _isEditing ? 'Actualizar Cancha' : 'Agregar Cancha',
+                              style: AppTextStyles.buttonText),
                         ),
                       ),
                     ],

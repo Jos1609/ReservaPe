@@ -51,4 +51,29 @@ class CourtModel {
       'material': material,
     };
   }
+  CourtModel copyWith({
+    String? id,
+    String? empresaId,
+    String? name,
+    String? sportType,
+    List<String>? photos,
+    double? dayPrice,
+    double? nightPrice,
+    bool? hasRoof,
+    int? teamCapacity,
+    String? material,
+  }) {
+    return CourtModel(
+      id: id ?? this.id,
+      empresaId: empresaId ?? this.empresaId,
+      name: name ?? this.name,
+      sportType: sportType ?? this.sportType,
+      photos: photos ?? this.photos,
+      dayPrice: dayPrice ?? this.dayPrice,
+      nightPrice: nightPrice ?? this.nightPrice,
+      hasRoof: hasRoof ?? this.hasRoof,
+      teamCapacity: teamCapacity ?? this.teamCapacity,
+      material: material ?? this.material,
+    );
+  }
 }

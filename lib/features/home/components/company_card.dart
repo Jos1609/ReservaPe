@@ -141,7 +141,9 @@ class HomeCompanyCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: (company.status == 'active')
                                 ? const Color.fromARGB(255, 237, 242, 237)
+                                    // ignore: deprecated_member_use
                                     .withOpacity(0.99)
+                                // ignore: deprecated_member_use
                                 : Colors.red.withOpacity(0.7),
                             borderRadius: BorderRadius.circular(20),
                           ),
