@@ -12,11 +12,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ReservationController extends ChangeNotifier {
   final ReservationService _service = ReservationService();
-  
+
   // Estados
   bool _isLoading = false;
   String? _error;
-  
+
   // Datos de la reserva
   CourtModel? _court;
   CompanyModel? _company;
@@ -25,17 +25,17 @@ class ReservationController extends ChangeNotifier {
   double _totalPrice = 0.0;
   double _depositAmount = 0.0;
   double _remainingAmount = 0.0;
-  
+
   // Datos del cliente (ahora viene del usuario autenticado)
   UserModel? _currentUser;
   String _alternativePhone = ''; // Por si quiere usar otro número
-  
+
   // Pago
   List<PaymentMethod> _paymentMethods = [];
   PaymentMethod? _selectedPaymentMethod;
   File? _receiptImage;
   String? _uploadedReceiptUrl;
-  
+
   // Estado de la reserva
   String? _reservationId;
   bool _isReservationComplete = false;
@@ -51,11 +51,11 @@ class ReservationController extends ChangeNotifier {
   double get depositAmount => _depositAmount;
   double get remainingAmount => _remainingAmount;
   UserModel? get currentUser => _currentUser;
-  String get clientName => _currentUser != null 
+  String get clientName => _currentUser != null
       ? '${_currentUser!.firstName} ${_currentUser!.lastName}'
       : '';
-  String get clientPhone => _alternativePhone.isNotEmpty 
-      ? _alternativePhone 
+  String get clientPhone => _alternativePhone.isNotEmpty
+      ? _alternativePhone
       : (_currentUser?.phone ?? '');
   List<PaymentMethod> get paymentMethods => _paymentMethods;
   PaymentMethod? get selectedPaymentMethod => _selectedPaymentMethod;
@@ -78,7 +78,7 @@ class ReservationController extends ChangeNotifier {
     try {
       // Cargar información del usuario actual
       _currentUser = await _service.getCurrentUserInfo();
-      
+
       if (_currentUser == null) {
         _error = 'No se pudo obtener la información del usuario';
         _isLoading = false;
@@ -88,7 +88,7 @@ class ReservationController extends ChangeNotifier {
 
       // Cargar información de la cancha
       _court = await _service.getCourtInfo(courtId);
-      
+
       if (_court != null) {
         // Cargar información de la empresa
         _company = await _service.getCompanyInfo(_court!.empresaId);
@@ -98,7 +98,7 @@ class ReservationController extends ChangeNotifier {
       _startTime = startTime;
       _endTime = endTime;
       _totalPrice = totalPrice;
-      
+
       // Calcular montos (50% de adelanto)
       _depositAmount = totalPrice * 0.5;
       _remainingAmount = totalPrice - _depositAmount;
@@ -135,9 +135,12 @@ class ReservationController extends ChangeNotifier {
 
   // Confirmar reserva
   Future<bool> confirmReservation() async {
-    if (_court == null || _receiptImage == null || 
-        _selectedPaymentMethod == null || _startTime == null || 
-        _endTime == null || _currentUser == null) {
+    if (_court == null ||
+        _receiptImage == null ||
+        _selectedPaymentMethod == null ||
+        _startTime == null ||
+        _endTime == null ||
+        _currentUser == null) {
       _error = 'Faltan datos para completar la reserva';
       notifyListeners();
       return false;
@@ -164,7 +167,7 @@ class ReservationController extends ChangeNotifier {
 
       // Subir comprobante
       _uploadedReceiptUrl = await _service.uploadPaymentReceipt(_receiptImage!);
-      
+
       if (_uploadedReceiptUrl == null) {
         _error = 'Error al subir el comprobante de pago';
         _isLoading = false;
@@ -219,20 +222,24 @@ class ReservationController extends ChangeNotifier {
 
     final dateFormat = DateFormat('dd/MM/yyyy');
     final timeFormat = DateFormat('HH:mm');
-    
+
+    final lat = _company!.coordinates['latitude'] ?? 0.0;
+    final lng = _company!.coordinates['longitude'] ?? 0.0;
+    final mapsUrl =
+        'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng';
+
     final message = '''
-🏟️ ¡Reserva Confirmada!
+⚽ ¡Tenemos partido!
 
-📍 Cancha: ${_court!.name}
-🏢 Lugar: ${_company!.name}
-📅 Fecha: ${dateFormat.format(_startTime!)}
-⏰ Hora: ${timeFormat.format(_startTime!)} - ${timeFormat.format(_endTime!)}
-💰 Total: S/ ${_totalPrice.toStringAsFixed(2)}
-💳 Adelanto pagado: S/ ${_depositAmount.toStringAsFixed(2)}
-📞 Contacto: $clientPhone
+📍 *Cancha*: ${_court!.name}
+🏢 *Lugar*: ${_company!.name}
+📅 *Fecha*: ${dateFormat.format(_startTime!)}
+⏰ *Hora*: ${timeFormat.format(_startTime!)} - ${timeFormat.format(_endTime!)}
 
-¡Nos vemos en la cancha! ⚽
-    ''';
+🗺️ Cómo llegar: $mapsUrl
+
+¡No faltes, nos vemos en la cancha! 🔥
+  ''';
 
     await Share.share(message);
   }
@@ -243,9 +250,9 @@ class ReservationController extends ChangeNotifier {
 
     final lat = _company!.coordinates['latitude'] ?? 0.0;
     final lng = _company!.coordinates['longitude'] ?? 0.0;
-    
+
     final url = 'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng';
-    
+
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
