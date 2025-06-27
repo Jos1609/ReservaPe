@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sintetico/components/barra_navegacion_empresa.dart';
 import 'package:sintetico/config/theme/colors.dart';
 import 'package:sintetico/config/theme/dimensions.dart';
 import 'package:sintetico/config/theme/text_styles.dart';
@@ -14,28 +15,33 @@ class HomeViewEmpresa extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Mis Canchas Sintéticas',
-            style: AppTextStyles.heading3(context)),
-        backgroundColor: AppColors.primary,
-        elevation: AppDimensions.cardElevation,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: AppDimensions.paddingMedium),
-            child: ElevatedButton(
-              onPressed: () {
-                AddCourtModal.show(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accent,
-                foregroundColor: AppColors.white,
-              ),
-              child: const Text('+ Agregar Cancha'),
-            ),
-          ),
-        ],
+      appBar: NavigationEmpresa(
+        selectedIndex: 0, // 0 para Inicio, 1 para Perfil
+        onItemSelected: (index) {
+          // Manejar navegación
+          switch (index) {
+            case 0:
+              // Ya estás en inicio
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(context, '/profile');
+              break;
+          }
+        },
       ),
-      body: SingleChildScrollView(  // Añade esto para permitir scroll
+      
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          AddCourtModal.show(context);
+        },
+        backgroundColor: AppColors.accent,
+        foregroundColor: AppColors.white,
+        icon: const Icon(Icons.add),
+        label: const Text('Agregar Cancha'),
+        elevation: AppDimensions.cardElevation,
+      ),
+      
+      body: SingleChildScrollView(
         child: StreamBuilder<List<CourtModel>>(
           stream: HomeEmpresaService.getUserCourts(),
           builder: (context, snapshot) {

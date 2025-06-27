@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sintetico/components/barra_navegacion.dart';
 import 'package:sintetico/features/detalle_cancha/components/barra_inferior.dart';
 import 'package:sintetico/features/detalle_cancha/components/carrusel_imagenes.dart';
 import 'package:sintetico/features/detalle_cancha/components/franjas_horarias.dart';
@@ -47,6 +48,22 @@ class _CourtDetailsViewState extends State<CourtDetailsView> {
       value: _controller,
       child: Scaffold(
         backgroundColor: AppColors.background,
+        bottomNavigationBar: CustomBottomNavBar(
+          currentIndex: 0,
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                Navigator.pushReplacementNamed(context, '/cliente_dashboard');
+                break;
+              case 1:
+                Navigator.pushReplacementNamed(context, '/historial_reservas');
+                break;
+              case 2:
+                Navigator.pushReplacementNamed(context, '/profile');
+                break;
+            }
+          },
+        ),
         body: Consumer<CourtDetailsController>(
           builder: (context, controller, _) {
             if (controller.isLoading) {

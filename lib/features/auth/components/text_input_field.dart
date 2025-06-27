@@ -7,6 +7,7 @@ class TextInputField extends StatefulWidget {
   final String label;
   final String placeholder;
   final bool isPassword;
+  final bool enabled;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final FormFieldValidator<String>? validator;
@@ -16,6 +17,7 @@ class TextInputField extends StatefulWidget {
     required this.label,
     required this.placeholder,
     this.isPassword = false,
+    this.enabled = true,
     this.controller,
     this.onChanged,
     this.validator,
@@ -29,12 +31,14 @@ class TextInputField extends StatefulWidget {
 
 class _TextInputFieldState extends State<TextInputField> {
   bool _obscureText = true;
+  
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Column(      
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        
         Text(widget.label, style: AppTextStyles.inputLabel),
         SizedBox(height: AppDimensions.paddingSmall),
         TextFormField(

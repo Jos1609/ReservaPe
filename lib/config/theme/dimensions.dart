@@ -63,4 +63,7 @@ class AppDimensions {
 
 // Radius
   static const double radiusM = 12.0;
+//barra de nav empresa
+  static const double iconSmall = 20.0;
+  static const double navBarHeight = 64.0;
 }

@@ -106,7 +106,9 @@ class CustomBottomNavBar extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+          // ignore: deprecated_member_use
           splashColor: activeColor.withOpacity(0.1),
+          // ignore: deprecated_member_use
           highlightColor: activeColor.withOpacity(0.05),
           child: Container(
             padding: EdgeInsets.symmetric(

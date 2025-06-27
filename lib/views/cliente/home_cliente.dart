@@ -53,6 +53,7 @@ class CompaniesPage extends StatelessWidget {
                                     'Buscar empresas por nombre o categoría...',
                                 // ignore: deprecated_member_use
                                 hintStyle: TextStyle(
+                                    // ignore: deprecated_member_use
                                     color: AppColors.gray.withOpacity(0.7)),
                                 prefixIcon: Container(
                                   margin: EdgeInsets.all(12),
@@ -180,6 +181,7 @@ class CompaniesPage extends StatelessWidget {
                                     AppDimensions.borderRadius),
                                 // ignore: deprecated_member_use
                                 border: Border.all(
+                                    // ignore: deprecated_member_use
                                     color: Colors.red.withOpacity(0.3)),
                               ),
                               child: Column(
@@ -201,6 +203,7 @@ class CompaniesPage extends StatelessWidget {
                                     'Por favor, intenta de nuevo más tarde',
                                     // ignore: deprecated_member_use
                                     style: TextStyle(
+                                        // ignore: deprecated_member_use
                                         color: Colors.red.withOpacity(0.8)),
                                   ),
                                 ],
@@ -352,6 +355,7 @@ class CompaniesPage extends StatelessWidget {
             // ignore: deprecated_member_use
             color: isSelected
                 ? AppColors.primary
+                // ignore: deprecated_member_use
                 : AppColors.primary.withOpacity(0.3),
             width: isSelected ? 0 : 1,
           ),

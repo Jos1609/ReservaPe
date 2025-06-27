@@ -1,6 +1,7 @@
 // lib/views/company_detail_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:sintetico/components/barra_navegacion.dart';
 import 'package:sintetico/config/theme/colors.dart';
 import 'package:sintetico/config/theme/dimensions.dart';
 import 'package:sintetico/config/theme/text_styles.dart';
@@ -39,6 +40,22 @@ class _CompanyDetailViewState extends State<CompanyDetailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      bottomNavigationBar: CustomBottomNavBar(
+          currentIndex: 0, 
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                Navigator.pushReplacementNamed(context, '/cliente_dashboard');
+                break;
+              case 1:
+                Navigator.pushReplacementNamed(context, '/historial_reservas');
+                break;
+              case 2:
+                Navigator.pushReplacementNamed(context, '/profile');
+                break;
+            }
+          },
+        ),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [

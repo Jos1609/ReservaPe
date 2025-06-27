@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'package:sintetico/config/theme/app_theme.dart';
 import 'package:sintetico/features/home_empresas/services/home_service.dart';
+import 'package:sintetico/features/perfil/controllers/controlador_perfil.dart';
 import 'package:sintetico/firebase_options.dart';
 import 'package:sintetico/views/cliente/historial_reservas.dart';
 import 'package:sintetico/views/cliente/home_cliente.dart';
 import 'package:sintetico/views/empresa/home_view_empresa.dart';
 import 'package:sintetico/views/home_view.dart';
+import 'package:sintetico/views/perfil_view.dart';
 import 'package:sintetico/views/superAdm/home.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -25,7 +28,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        // Provider para el ProfileController
+        ChangeNotifierProvider(
+          create: (_) => ProfileController(),
+        ),
+      ],
+    child: MaterialApp(
       title: 'Reserva pe',
       theme: AppTheme.theme,
     initialRoute: '/sintetico',
@@ -35,7 +45,8 @@ class MyApp extends StatelessWidget {
         '/empresa_dashboard': (context) => HomeViewEmpresa(),
         '/cliente_dashboard': (context) => CompaniesPage(),
         '/historial_reservas': (context) => ReservationHistoryView(),
+        '/profile': (context) => ProfileView(),
       },
-    );
-  }
+    ),
+ ); }
 }

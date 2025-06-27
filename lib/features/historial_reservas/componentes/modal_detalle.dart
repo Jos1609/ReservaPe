@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:sintetico/models/cancha.dart';
 import 'package:sintetico/models/empresa.dart';
@@ -521,8 +519,9 @@ class ReservationDetailModal extends StatelessWidget {
   }
 
   Future<void> _shareReservation(BuildContext context) async {
-    if (court == null || company == null || reservation.startTime == null)
+    if (court == null || company == null) {
       return;
+    }
 
     final dateFormat = DateFormat('dd/MM/yyyy');
     final timeFormat = DateFormat('HH:mm');
@@ -563,6 +562,7 @@ class ReservationDetailModal extends StatelessWidget {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No se pudo abrir Google Maps'),

@@ -189,5 +189,19 @@ class AppTextStyles {
  height: 1.2,
  letterSpacing: 0.4,
 );
+static TextStyle? get headlineSmall => TextStyle(
+ fontSize: 20,
+ fontWeight: FontWeight.w500,
+);
+
+static TextStyle? get headlineMedium => TextStyle(
+ fontSize: 24,
+ fontWeight: FontWeight.w500,
+);
+
+static TextStyle? get bodyMedium => TextStyle(
+ fontSize: 14,
+ fontWeight: FontWeight.w400,
+);
 
 }
