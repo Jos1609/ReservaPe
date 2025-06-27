@@ -16,7 +16,6 @@ class AppDimensions {
   static const double inputHeight = 48.0;
   static const double buttonHeight = 50.0;
 
-
   //canchas
   static const double borderRadiusSmall = 8.0; // Para los botones
 
@@ -25,10 +24,10 @@ class AppDimensions {
   static const double mobileBreakpoint = 600;
   static const double tabletBreakpoint = 768;
   static const double desktopBreakpoint = 1024;
-  
+
   // Padding responsivo
   static const double paddingXLarge = 32.0;
-  
+
   // Espaciado responsivo
   static const double spacingXSmall = 4.0;
   static const double spacingSmall = 8.0;
@@ -36,21 +35,32 @@ class AppDimensions {
   static const double spacingLarge = 16.0;
   static const double spacingXLarge = 24.0;
 
-
   static const double spacing = 16.0;
   static const double padding = 16.0;
 
   // Padding
   static const double borderRadiusLarge = 16.0;
   static const double borderRadiusXLarge = 24.0;
-  
+
   // Elevation
   static const double elevationSmall = 2.0;
   static const double elevationMedium = 4.0;
   static const double elevationLarge = 8.0;
-  
+
   // Icon Sizes
   static const double iconSizeSmall = 16.0;
   static const double iconSizeMedium = 24.0;
   static const double iconSizeXLarge = 48.0;
-  }
+
+  // Dimensiones de navegación
+  static const double paddingXS = 4.0;
+  static const double paddingS = 8.0;
+  static const double paddingM = 16.0;
+  static const double paddingXL = 32.0;
+
+// Spacing
+  static const double spacingXS = 4.0;
+
+// Radius
+  static const double radiusM = 12.0;
+}

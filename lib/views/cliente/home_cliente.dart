@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sintetico/components/barra_navegacion.dart';
 import 'package:sintetico/features/home_cliente/components/tarjeta_empresa.dart';
 import 'package:sintetico/features/home_cliente/controllers/controlador.dart';
 import 'package:sintetico/features/home_cliente/services/empresas_service.dart';
@@ -30,12 +31,13 @@ class CompaniesPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: AppDimensions.spacing),
-                          
+
                           // Buscador mejorado
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(AppDimensions.borderRadius * 2),
+                              borderRadius: BorderRadius.circular(
+                                  AppDimensions.borderRadius * 2),
                               boxShadow: [
                                 BoxShadow(
                                   // ignore: deprecated_member_use
@@ -47,9 +49,11 @@ class CompaniesPage extends StatelessWidget {
                             ),
                             child: TextField(
                               decoration: InputDecoration(
-                                hintText: 'Buscar empresas por nombre o categoría...',
+                                hintText:
+                                    'Buscar empresas por nombre o categoría...',
                                 // ignore: deprecated_member_use
-                                hintStyle: TextStyle(color: AppColors.gray.withOpacity(0.7)),
+                                hintStyle: TextStyle(
+                                    color: AppColors.gray.withOpacity(0.7)),
                                 prefixIcon: Container(
                                   margin: EdgeInsets.all(12),
                                   padding: EdgeInsets.all(8),
@@ -65,7 +69,8 @@ class CompaniesPage extends StatelessWidget {
                                   ),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(AppDimensions.borderRadius * 2),
+                                  borderRadius: BorderRadius.circular(
+                                      AppDimensions.borderRadius * 2),
                                   borderSide: BorderSide.none,
                                 ),
                                 filled: true,
@@ -79,7 +84,7 @@ class CompaniesPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: AppDimensions.spacing * 1.5),
-                          
+
                           // Filtros mejorados
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,10 +107,17 @@ class CompaniesPage extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(horizontal: 4),
                                   child: Row(
                                     children: [
-                                      _buildFilterChip('Todos', controller, null, Icons.apps),
-                                      _buildFilterChip('Abierto', controller, 'activo', Icons.check_circle),
-                                      _buildFilterChip('Cerrado', controller, 'inactivo', Icons.cancel),
-                                      _buildFilterChip('Mantenimiento', controller, 'En mantenimiento', Icons.build),
+                                      _buildFilterChip('Todos', controller,
+                                          null, Icons.apps),
+                                      _buildFilterChip('Abierto', controller,
+                                          'activo', Icons.check_circle),
+                                      _buildFilterChip('Cerrado', controller,
+                                          'inactivo', Icons.cancel),
+                                      _buildFilterChip(
+                                          'Mantenimiento',
+                                          controller,
+                                          'En mantenimiento',
+                                          Icons.build),
                                     ],
                                   ),
                                 ),
@@ -117,7 +129,7 @@ class CompaniesPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   // Grid de empresas scrollable
                   StreamBuilder<List<CompanyModel>>(
                     stream: controller.getFilteredCompanies(),
@@ -136,7 +148,8 @@ class CompaniesPage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                   child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.primary),
                                     strokeWidth: 3,
                                   ),
                                 ),
@@ -153,7 +166,7 @@ class CompaniesPage extends StatelessWidget {
                           ),
                         );
                       }
-                      
+
                       if (snapshot.hasError) {
                         return SliverFillRemaining(
                           child: Center(
@@ -163,14 +176,17 @@ class CompaniesPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 // ignore: deprecated_member_use
                                 color: Colors.red.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+                                borderRadius: BorderRadius.circular(
+                                    AppDimensions.borderRadius),
                                 // ignore: deprecated_member_use
-                                border: Border.all(color: Colors.red.withOpacity(0.3)),
+                                border: Border.all(
+                                    color: Colors.red.withOpacity(0.3)),
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.error_outline, color: Colors.red, size: 48),
+                                  Icon(Icons.error_outline,
+                                      color: Colors.red, size: 48),
                                   SizedBox(height: 12),
                                   Text(
                                     'Error al cargar empresas',
@@ -184,7 +200,8 @@ class CompaniesPage extends StatelessWidget {
                                   Text(
                                     'Por favor, intenta de nuevo más tarde',
                                     // ignore: deprecated_member_use
-                                    style: TextStyle(color: Colors.red.withOpacity(0.8)),
+                                    style: TextStyle(
+                                        color: Colors.red.withOpacity(0.8)),
                                   ),
                                 ],
                               ),
@@ -192,9 +209,9 @@ class CompaniesPage extends StatelessWidget {
                           ),
                         );
                       }
-                      
+
                       final companies = snapshot.data ?? [];
-                      
+
                       if (companies.isEmpty) {
                         return SliverFillRemaining(
                           child: Center(
@@ -239,11 +256,13 @@ class CompaniesPage extends StatelessWidget {
                           ),
                         );
                       }
-                      
+
                       return SliverPadding(
-                        padding: EdgeInsets.symmetric(horizontal: AppDimensions.padding),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: AppDimensions.padding),
                         sliver: SliverGrid(
-                          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 400,
                             childAspectRatio: 0.75,
                             crossAxisSpacing: AppDimensions.spacing,
@@ -263,7 +282,7 @@ class CompaniesPage extends StatelessWidget {
                       );
                     },
                   ),
-                  
+
                   // Espaciado final para mejor UX
                   SliverToBoxAdapter(
                     child: SizedBox(height: AppDimensions.spacing * 2),
@@ -271,13 +290,34 @@ class CompaniesPage extends StatelessWidget {
                 ],
               ),
             ),
+            bottomNavigationBar: CustomBottomNavBar(
+              currentIndex:
+                  0, // Esta pantalla de empresas sería "Inicio" del módulo
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    // Ya estás en la pantalla principal del módulo (empresas)
+                    break;
+                  case 1:
+                    // Navegar al historial de este módulo específico
+                    Navigator.pushReplacementNamed(
+                        context, '/historial_reservas');
+                    break;
+                  case 2:
+                    // Navegar al perfil
+                    Navigator.pushReplacementNamed(context, '/profile');
+                    break;
+                }
+              },
+            ),
           );
         },
       ),
     );
   }
 
-  Widget _buildFilterChip(String label, CompaniesController controller, String? status, IconData icon) {
+  Widget _buildFilterChip(String label, CompaniesController controller,
+      String? status, IconData icon) {
     final isSelected = controller.selectedStatus == status;
     return Padding(
       padding: EdgeInsets.only(right: AppDimensions.spacingSmall),
@@ -310,7 +350,9 @@ class CompaniesPage extends StatelessWidget {
           shadowColor: AppColors.primary.withOpacity(0.3),
           side: BorderSide(
             // ignore: deprecated_member_use
-            color: isSelected ? AppColors.primary : AppColors.primary.withOpacity(0.3),
+            color: isSelected
+                ? AppColors.primary
+                : AppColors.primary.withOpacity(0.3),
             width: isSelected ? 0 : 1,
           ),
           shape: RoundedRectangleBorder(

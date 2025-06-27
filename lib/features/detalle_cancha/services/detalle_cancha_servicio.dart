@@ -81,8 +81,6 @@ class CourtDetailsService {
     CompanyModel company,
   ) async {
     try {
-      print(
-          '\n=== getAvailableTimeSlots for ${date.toString().split(' ')[0]} ===');
 
       final reservations = await getCourtReservations(courtId, date);
       final List<TimeSlot> allSlots = [];
@@ -129,12 +127,9 @@ class CourtDetailsService {
         ));
       }
 
-      print(
-          'Summary: ${allSlots.where((s) => s.isReserved).length} reserved slots out of ${allSlots.length}');
 
       return allSlots;
     } catch (e) {
-      print('ERROR in getAvailableTimeSlots: $e');
       return [];
     }
   }

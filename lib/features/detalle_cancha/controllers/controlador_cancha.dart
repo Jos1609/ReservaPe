@@ -88,6 +88,7 @@ class CourtDetailsController extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
+      // ignore: avoid_print
       print('Error al cargar slots: $e');
     }
   }

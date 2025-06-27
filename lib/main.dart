@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:sintetico/config/theme/app_theme.dart';
 import 'package:sintetico/features/home_empresas/services/home_service.dart';
 import 'package:sintetico/firebase_options.dart';
+import 'package:sintetico/views/cliente/historial_reservas.dart';
 import 'package:sintetico/views/cliente/home_cliente.dart';
 import 'package:sintetico/views/empresa/home_view_empresa.dart';
 import 'package:sintetico/views/home_view.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/admin_dashboard': (context) => CompaniesScreen(),
         '/empresa_dashboard': (context) => HomeViewEmpresa(),
         '/cliente_dashboard': (context) => CompaniesPage(),
+        '/historial_reservas': (context) => ReservationHistoryView(),
       },
     );
   }
