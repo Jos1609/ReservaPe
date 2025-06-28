@@ -5,7 +5,7 @@ import '../../config/theme/text_styles.dart';
 import '../../config/theme/dimensions.dart';
 
 /// Barra de navegación responsiva "Navegación Empresa"
-class NavigationEmpresa extends StatelessWidget implements PreferredSizeWidget {
+class NavigationEmpresa extends StatelessWidget {
   /// Índice del elemento seleccionado actualmente
   final int selectedIndex;
   
@@ -34,43 +34,24 @@ class NavigationEmpresa extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  /// Construye la navegación para dispositivos móviles
   Widget _buildMobileNavigation(BuildContext context) {
-    return AppBar(
+    return BottomNavigationBar(
       backgroundColor: AppColors.surface,
       elevation: 2,
-      title: Text(
-        'Navegación Empresa',
-        style: AppTextStyles.headlineSmall?.copyWith(
-          fontWeight: FontWeight.w600,
+      currentIndex: selectedIndex,
+      onTap: onItemSelected,
+      selectedItemColor: Theme.of(context).primaryColor,
+      unselectedItemColor: Colors.grey,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home),
+          label: 'Inicio',
         ),
-      ),
-      centerTitle: true,
-      actions: [
-        // Menú hamburguesa para móvil
-        PopupMenuButton<int>(
-          icon: const Icon(Icons.menu),
-          onSelected: onItemSelected,
-          itemBuilder: (context) => [
-            PopupMenuItem<int>(
-              value: 0,
-              child: _buildMenuItem(
-                Icons.home_outlined,
-                Icons.home,
-                'Inicio',
-                0,
-              ),
-            ),
-            PopupMenuItem<int>(
-              value: 1,
-              child: _buildMenuItem(
-                Icons.person_outline,
-                Icons.person,
-                'Perfil',
-                1,
-              ),
-            ),
-          ],
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person),
+          label: 'Perfil',
         ),
       ],
     );
@@ -98,7 +79,7 @@ class NavigationEmpresa extends StatelessWidget implements PreferredSizeWidget {
           children: [
             // Logo/Título de la empresa
             Text(
-              'Navegación Empresa',
+              'Reserva Pe',
               style: AppTextStyles.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -174,35 +155,4 @@ class NavigationEmpresa extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
-  /// Construye un elemento de menú para el popup en móvil
-  Widget _buildMenuItem(
-    IconData outlinedIcon,
-    IconData filledIcon,
-    String label,
-    int index,
-  ) {
-    final isSelected = selectedIndex == index;
-    
-    return Row(
-      children: [
-        Icon(
-          isSelected ? filledIcon : outlinedIcon,
-          color: isSelected ? AppColors.primary : AppColors.textSecondary,
-          size: AppDimensions.iconSmall,
-        ),
-        SizedBox(width: AppDimensions.spacingMedium),
-        Text(
-          label,
-          style: AppTextStyles.bodyMedium?.copyWith(
-            color: isSelected ? AppColors.primary : AppColors.textPrimary,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => Size.fromHeight(AppDimensions.navBarHeight);
 }

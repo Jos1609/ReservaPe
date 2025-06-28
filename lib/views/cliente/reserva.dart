@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sintetico/components/barra_navegacion.dart';
 import 'package:sintetico/features/reservas/components/cliente/acciones_reserva.dart';
 import 'package:sintetico/features/reservas/components/cliente/dialogo_confirmacion.dart';
 import 'package:sintetico/features/reservas/components/cliente/encabezado_reserva.dart';
@@ -136,16 +137,33 @@ class _ReservationSummaryViewState extends State<ReservationSummaryView> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 768;
     return ChangeNotifierProvider.value(
       value: _controller,
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppBar(
-          title: const Text('Confirmar Reserva'),
-          backgroundColor: Colors.white,
-          foregroundColor: AppColors.textPrimary,
-          elevation: 0,
-        ),
+        appBar: isDesktop
+                ? PreferredSize(
+                    preferredSize: const Size.fromHeight(70),
+                    child: CustomBottomNavBar(
+                      currentIndex: 0,
+                      onTap: (index) {
+                        switch (index) {
+                          case 0:
+                            // Ya estás en la pantalla principal
+                            break;
+                          case 1:
+                            Navigator.pushReplacementNamed(
+                                context, '/historial_reservas');
+                            break;
+                          case 2:
+                            Navigator.pushReplacementNamed(context, '/profile');
+                            break;
+                        }
+                      },
+                    ),
+                  )
+                : null,
         body: Consumer<ReservationController>(
           builder: (context, controller, _) {
             if (controller.isLoading && controller.court == null) {
@@ -297,6 +315,26 @@ class _ReservationSummaryViewState extends State<ReservationSummaryView> {
             );
           },
         ),
+        // BottomNavigationBar solo para móvil
+            bottomNavigationBar: !isDesktop
+                ? CustomBottomNavBar(
+                    currentIndex: 0,
+                    onTap: (index) {
+                      switch (index) {
+                        case 0:
+                          // Ya estás en la pantalla principal
+                          break;
+                        case 1:
+                          Navigator.pushReplacementNamed(
+                              context, '/historial_reservas');
+                          break;
+                        case 2:
+                          Navigator.pushReplacementNamed(context, '/profile');
+                          break;
+                      }
+                    },
+                  )
+                : null,
       ),
     );
   }

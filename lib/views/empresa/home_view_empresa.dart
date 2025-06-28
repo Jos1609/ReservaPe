@@ -14,22 +14,44 @@ class HomeViewEmpresa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 768;
     return Scaffold(
-      appBar: NavigationEmpresa(
-        selectedIndex: 0, // 0 para Inicio, 1 para Perfil
-        onItemSelected: (index) {
-          // Manejar navegación
-          switch (index) {
-            case 0:
-              // Ya estás en inicio
-              break;
-            case 1:
-              Navigator.pushReplacementNamed(context, '/profile');
-              break;
-          }
-        },
-      ),
-      
+      appBar: isDesktop
+          ? PreferredSize(
+              preferredSize: Size.fromHeight(AppDimensions.navBarHeight),
+              child: NavigationEmpresa(
+                selectedIndex: 0,
+                onItemSelected: (index) {
+                  switch (index) {
+                    case 0:
+                      Navigator.pushReplacementNamed(
+                          context, '/empresa_dashboard');
+                      break;
+                    case 1:
+                      Navigator.pushReplacementNamed(context, '/profile');
+                      break;
+                  }
+                },
+              ),
+            )
+          : null,
+      // BottomNavigationBar solo para móvil
+      bottomNavigationBar: !isDesktop
+          ? NavigationEmpresa(
+              selectedIndex: 0,
+              onItemSelected: (index) {
+                switch (index) {
+                  case 0:
+                    Navigator.pushReplacementNamed(
+                        context, '/empresa_dashboard');
+                    break;
+                  case 1:
+                    Navigator.pushReplacementNamed(context, '/profile');
+                    break;
+                }
+              },
+            )
+          : null,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           AddCourtModal.show(context);
@@ -40,7 +62,6 @@ class HomeViewEmpresa extends StatelessWidget {
         label: const Text('Agregar Cancha'),
         elevation: AppDimensions.cardElevation,
       ),
-      
       body: SingleChildScrollView(
         child: StreamBuilder<List<CourtModel>>(
           stream: HomeEmpresaService.getUserCourts(),
@@ -113,14 +134,17 @@ class HomeViewEmpresa extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ReservationsView(court: court),
+                                      builder: (context) =>
+                                          ReservationsView(court: court),
                                     ),
                                   );
                                 }),
                           );
                         }).toList(),
                       ),
-                      const SizedBox(height: AppDimensions.paddingLarge), // Espacio extra al final
+                      const SizedBox(
+                          height: AppDimensions
+                              .paddingLarge), // Espacio extra al final
                     ],
                   );
                 },

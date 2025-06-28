@@ -104,53 +104,37 @@ class _ReservationHistoryViewState extends State<ReservationHistoryView> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 768;
     return ChangeNotifierProvider.value(
       value: _controller,
       child: Scaffold(
         backgroundColor: AppColors.background,
-        bottomNavigationBar: CustomBottomNavBar(
-          currentIndex: 1, // Estamos en el historial
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                Navigator.pushReplacementNamed(context, '/cliente_dashboard');
-                break;
-              case 1:
-                // Ya estás en historial
-                break;
-              case 2:
-                Navigator.pushReplacementNamed(context, '/profile');
-                break;
-            }
-          },
-        ),
-        appBar: AppBar(
-          title: const Text('Mis Reservas'),
-          backgroundColor: Colors.white,
-          foregroundColor: AppColors.textPrimary,
-          elevation: 0,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(60),
-            child: Consumer<ReservationHistoryController>(
-              builder: (context, controller, _) {
-                // Contar reservas por estado
-                final counts = <String, int>{
-                  'Todas': controller.reservations.length,
-                };
+        // AppBar solo para desktop
+        appBar: isDesktop
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(70),
+                child: CustomBottomNavBar(
+                  currentIndex: 1,
+                  onTap: (index) {
+                    switch (index) {
+                      case 0:
+                        // Ya estás en la pantalla principal
+                        Navigator.pushReplacementNamed(
+                            context, '/cliente_dashboard');
+                        break;
+                      case 1:
+                        Navigator.pushReplacementNamed(
+                            context, '/historial_reservas');
+                        break;
+                      case 2:
+                        Navigator.pushReplacementNamed(context, '/profile');
+                        break;
+                    }
+                  },
+                ),
+              )
+            : null,
 
-                for (final group in controller.groupedReservations.entries) {
-                  counts[group.key] = group.value.length;
-                }
-
-                return ReservationStatusFilter(
-                  selectedStatus: controller.selectedStatus,
-                  onStatusChanged: controller.changeStatusFilter,
-                  counts: counts,
-                );
-              },
-            ),
-          ),
-        ),
         body: Consumer<ReservationHistoryController>(
           builder: (context, controller, _) {
             if (controller.isLoading) {
@@ -182,56 +166,111 @@ class _ReservationHistoryViewState extends State<ReservationHistoryView> {
               );
             }
 
-            final reservations = controller.filteredReservations;
+            return Column(
+              children: [
+                // Filtro de estados
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Builder(
+                    builder: (context) {
+                      // Contar reservas por estado
+                      final counts = <String, int>{
+                        'Todas': controller.reservations.length,
+                      };
 
-            if (reservations.isEmpty) {
-              return EmptyReservations(
-                statusFilter: controller.selectedStatus,
-                onExplore: () {
-                  Navigator.pushReplacementNamed(context, '/cliente_dashboard');
-                },
-              );
-            }
+                      for (final group
+                          in controller.groupedReservations.entries) {
+                        counts[group.key] = group.value.length;
+                      }
 
-            return RefreshIndicator(
-              onRefresh: () async {
-                controller.init();
-              },
-              color: AppColors.primary,
-              child: ListView.builder(
-                padding: const EdgeInsets.all(AppDimensions.paddingMedium),
-                itemCount: reservations.length,
-                itemBuilder: (context, index) {
-                  final reservation = reservations[index];
-                  final court =
-                      controller.getCourtForReservation(reservation.courtId);
-                  final company =
-                      controller.getCompanyForCourt(reservation.courtId);
-
-                  return ReservationCard(
-                    reservation: reservation,
-                    court: court,
-                    company: company,
-                    onTap: () {
-                      ReservationDetailModal.show(
-                        context,
-                        reservation: reservation,
-                        court: court,
-                        company: company,
-                        onCancel: controller.canCancelReservation(reservation)
-                            ? () => _showCancelDialog(reservation.id)
-                            : null,
+                      return ReservationStatusFilter(
+                        selectedStatus: controller.selectedStatus,
+                        onStatusChanged: controller.changeStatusFilter,
+                        counts: counts,
                       );
                     },
-                    onCancel: controller.canCancelReservation(reservation)
-                        ? () => _showCancelDialog(reservation.id)
-                        : null,
-                  );
-                },
-              ),
+                  ),
+                ),
+
+                // Contenido principal
+                Expanded(
+                  child: controller.filteredReservations.isEmpty
+                      ? EmptyReservations(
+                          statusFilter: controller.selectedStatus,
+                          onExplore: () {
+                            Navigator.pushReplacementNamed(
+                                context, '/cliente_dashboard');
+                          },
+                        )
+                      : RefreshIndicator(
+                          onRefresh: () async {
+                            controller.init();
+                          },
+                          color: AppColors.primary,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(
+                                AppDimensions.paddingMedium),
+                            itemCount: controller.filteredReservations.length,
+                            itemBuilder: (context, index) {
+                              final reservation =
+                                  controller.filteredReservations[index];
+                              final court = controller
+                                  .getCourtForReservation(reservation.courtId);
+                              final company = controller
+                                  .getCompanyForCourt(reservation.courtId);
+
+                              return ReservationCard(
+                                reservation: reservation,
+                                court: court,
+                                company: company,
+                                onTap: () {
+                                  ReservationDetailModal.show(
+                                    context,
+                                    reservation: reservation,
+                                    court: court,
+                                    company: company,
+                                    onCancel: controller
+                                            .canCancelReservation(reservation)
+                                        ? () =>
+                                            _showCancelDialog(reservation.id)
+                                        : null,
+                                  );
+                                },
+                                onCancel: controller
+                                        .canCancelReservation(reservation)
+                                    ? () => _showCancelDialog(reservation.id)
+                                    : null,
+                              );
+                            },
+                          ),
+                        ),
+                ),
+              ],
             );
           },
         ),
+      // BottomNavigationBar solo para móvil
+        bottomNavigationBar: !isDesktop
+            ? CustomBottomNavBar(
+                currentIndex: 1,
+                onTap: (index) {
+                  switch (index) {
+                    case 0:
+                      Navigator.pushReplacementNamed(
+                          context, '/cliente_dashboard');
+                      break;
+                    case 1:
+                      Navigator.pushReplacementNamed(
+                          context, '/historial_reservas');
+                      break;
+                    case 2:
+                      Navigator.pushReplacementNamed(context, '/profile');
+                      break;
+                  }
+                },
+              )
+            : null,
       ),
     );
   }

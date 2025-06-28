@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sintetico/components/barra_navegacion.dart';
 import 'package:sintetico/components/barra_navegacion_empresa.dart';
+import 'package:sintetico/config/theme/dimensions.dart';
 import 'package:sintetico/features/perfil/components/avatar.dart';
 import 'package:sintetico/features/perfil/components/cambiar_password.dart';
 import 'package:sintetico/features/perfil/components/formulario_perfil_empresa.dart';
@@ -34,47 +35,82 @@ class _ProfileViewState extends State<ProfileView> {
   Widget build(BuildContext context) {
     return Consumer<ProfileController>(
       builder: (context, controller, child) {
+        final isDesktop = MediaQuery.of(context).size.width >= 768;
+
         return Scaffold(
-          backgroundColor: Colors.grey[50], // O usa AppColors.background
+          backgroundColor: Colors.grey[50],
 
-          // Barra de navegación condicional según el tipo de usuario
-          appBar: controller.isCompany
-              ? NavigationEmpresa(
-                  selectedIndex: 1, // Perfil seleccionado
-                  onItemSelected: (index) {
-                    switch (index) {
-                      case 0:
-                        Navigator.pushReplacementNamed(
-                            context, '/empresa_dashboard');
-                        break;
-                      case 1:
-                        // Ya estás en perfil
-                        break;
-                    }
-                  },
+          // AppBar para desktop (tanto empresa como cliente)
+          appBar: isDesktop && !controller.isLoading
+              ? PreferredSize(
+                  preferredSize: const Size.fromHeight(70),
+                  child: controller.isCompany
+                      ? NavigationEmpresa(
+                          selectedIndex: 1,
+                          onItemSelected: (index) {
+                            switch (index) {
+                              case 0:
+                                Navigator.pushReplacementNamed(
+                                    context, '/empresa_dashboard');
+                                break;
+                              case 1:
+                                break;
+                            }
+                          },
+                        )
+                      : CustomBottomNavBar(
+                          currentIndex: 2,
+                          onTap: (index) {
+                            switch (index) {
+                              case 0:
+                                Navigator.pushReplacementNamed(
+                                    context, '/cliente_dashboard');
+                                break;
+                              case 1:
+                                Navigator.pushReplacementNamed(
+                                    context, '/historial_reservas');
+                                break;
+                              case 2:
+                                break;
+                            }
+                          },
+                        ),
                 )
-              : null, // Para clientes no hay AppBar, solo bottomNavigationBar
+              : null,
 
-          // Barra inferior solo para clientes
-          bottomNavigationBar: !controller.isCompany
-              ? CustomBottomNavBar(
-                  currentIndex: 2, // Perfil seleccionado
-                  onTap: (index) {
-                    switch (index) {
-                      case 0:
-                        Navigator.pushReplacementNamed(
-                            context, '/cliente_dashboard');
-                        break;
-                      case 1:
-                        Navigator.pushReplacementNamed(
-                            context, '/historial_reservas');
-                        break;
-                      case 2:
-                        // Ya estás en perfil
-                        break;
-                    }
-                  },
-                )
+          // BottomNavigationBar solo para móvil
+          bottomNavigationBar: !isDesktop && !controller.isLoading
+              ? controller.isCompany
+                  ? NavigationEmpresa(
+                      selectedIndex: 1,
+                      onItemSelected: (index) {
+                        switch (index) {
+                          case 0:
+                            Navigator.pushReplacementNamed(
+                                context, '/empresa_dashboard');
+                            break;
+                          case 1:
+                            break;
+                        }
+                      },
+                    )
+                  : CustomBottomNavBar(
+                      currentIndex: 2,
+                      onTap: (index) {
+                        switch (index) {
+                          case 0:
+                            Navigator.pushReplacementNamed(
+                                context, '/cliente_dashboard');
+                            break;
+                          case 1:
+                            Navigator.pushReplacementNamed(
+                                context, '/historial_reservas');
+                            break;
+                          case 2:
+                            break;
+                        }
+                      },
+                    )
               : null,
 
           body: _buildBody(controller),

@@ -52,22 +52,44 @@ class _ReservationsViewContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final padding = _getResponsivePadding(context);
+     final isDesktop = MediaQuery.of(context).size.width >= 768;
 
     return Scaffold(
       backgroundColor: AppColors.light,
-      appBar: NavigationEmpresa(
-        selectedIndex: 0,
-        onItemSelected: (index) {
-          switch (index) {
-            case 0:
-              Navigator.pushReplacementNamed(context, '/empresa_dashboard');
-              break;
-            case 1:
-              Navigator.pushReplacementNamed(context, '/profile');
-              break;
-          }
-        },
-      ),
+       appBar: isDesktop 
+          ? PreferredSize(
+              preferredSize: Size.fromHeight(AppDimensions.navBarHeight),
+              child: NavigationEmpresa(
+                selectedIndex: 0,
+                onItemSelected: (index) {
+                  switch (index) {
+                    case 0:
+                      Navigator.pushReplacementNamed(context, '/empresa_dashboard');
+                      break;
+                    case 1:
+                      Navigator.pushReplacementNamed(context, '/profile');
+                      break;
+                  }
+                },
+              ),
+            )
+          : null,
+      // BottomNavigationBar solo para móvil
+      bottomNavigationBar: !isDesktop
+          ? NavigationEmpresa(
+              selectedIndex: 0,
+              onItemSelected: (index) {
+                switch (index) {
+                  case 0:
+                    Navigator.pushReplacementNamed(context, '/empresa_dashboard');
+                    break;
+                  case 1:
+                    Navigator.pushReplacementNamed(context, '/profile');
+                    break;
+                }
+              },
+            )
+          : null,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {

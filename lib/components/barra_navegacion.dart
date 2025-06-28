@@ -19,68 +19,123 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isCompact = constraints.maxWidth < 768;
+        
+        if (isCompact) {
+          return _buildMobileNavigation(context);
+        } else {
+          return _buildDesktopNavigation(context);
+        }
+      },
+    );
+  }
+
+  /// Construye la navegación para móvil (BottomNavigationBar)
+  Widget _buildMobileNavigation(BuildContext context) {
+    return BottomNavigationBar(
+      backgroundColor: AppColors.surface,
+      elevation: 8,
+      currentIndex: currentIndex,
+      onTap: onTap,
+      selectedItemColor: AppColors.navItemActive,
+      unselectedItemColor: AppColors.navItemInactive,
+      selectedFontSize: 12,
+      unselectedFontSize: 10,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home_rounded),
+          label: 'Inicio',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.history_outlined),
+          activeIcon: Icon(Icons.history_rounded),
+          label: 'Historial',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person_rounded),
+          label: 'Perfil',
+        ),
+      ],
+    );
+  }
+
+  /// Construye la navegación para desktop (AppBar style)
+  Widget _buildDesktopNavigation(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final screenWidth = MediaQuery.of(context).size.width;
-    
-    // Determinar si es una pantalla grande (tablet/desktop)
-    final isLargeScreen = screenWidth > 600;
     
     return Container(
+      height: 70,
       decoration: BoxDecoration(
         color: isDarkMode ? AppColors.navBarBackgroundDark : AppColors.navBarBackground,
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: SafeArea(
-        top: false,
-        child: Container(
-          height: isLargeScreen ? 70 : 60,
-          padding: EdgeInsets.symmetric(
-            horizontal: isLargeScreen ? AppDimensions.paddingXL : AppDimensions.paddingM,
-            vertical: AppDimensions.paddingS,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(
-                context: context,
-                icon: Icons.home_rounded,
-                label: 'Inicio',
-                index: 0,
-                isActive: currentIndex == 0,
-                onTap: () => onTap(0),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppDimensions.paddingLarge,
+        ),
+        child: Row(
+          children: [
+            // Logo/Título
+            Text(
+              'Reserva Pe',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isDarkMode ? Colors.white : Colors.black87,
               ),
-              _buildNavItem(
-                context: context,
-                icon: Icons.history_rounded,
-                label: 'Historial',
-                index: 1,
-                isActive: currentIndex == 1,
-                onTap: () => onTap(1),
-              ),
-              _buildNavItem(
-                context: context,
-                icon: Icons.person_rounded,
-                label: 'Perfil',
-                index: 2,
-                isActive: currentIndex == 2,
-                onTap: () => onTap(2),
-              ),
-            ],
-          ),
+            ),
+            
+            const Spacer(),
+            
+            // Elementos de navegación
+            Row(
+              children: [
+                _buildDesktopNavItem(
+                  context: context,
+                  icon: Icons.home_rounded,
+                  label: 'Inicio',
+                  index: 0,
+                  isActive: currentIndex == 0,
+                  onTap: () => onTap(0),
+                ),
+                SizedBox(width: AppDimensions.spacingLarge),
+                _buildDesktopNavItem(
+                  context: context,
+                  icon: Icons.history_rounded,
+                  label: 'Historial',
+                  index: 1,
+                  isActive: currentIndex == 1,
+                  onTap: () => onTap(1),
+                ),
+                SizedBox(width: AppDimensions.spacingLarge),
+                _buildDesktopNavItem(
+                  context: context,
+                  icon: Icons.person_rounded,
+                  label: 'Perfil',
+                  index: 2,
+                  isActive: currentIndex == 2,
+                  onTap: () => onTap(2),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  /// Construye un elemento individual de navegación
-  Widget _buildNavItem({
+  /// Construye un elemento de navegación para desktop
+  Widget _buildDesktopNavItem({
     required BuildContext context,
     required IconData icon,
     required String label,
@@ -89,10 +144,6 @@ class CustomBottomNavBar extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isLargeScreen = screenWidth > 600;
-    
-    // Colores según el estado y tema
     final activeColor = AppColors.navItemActive;
     final inactiveColor = isDarkMode 
         ? AppColors.navItemInactiveDark 
@@ -100,71 +151,38 @@ class CustomBottomNavBar extends StatelessWidget {
     
     final currentColor = isActive ? activeColor : inactiveColor;
     
-    return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-          // ignore: deprecated_member_use
-          splashColor: activeColor.withOpacity(0.1),
-          // ignore: deprecated_member_use
-          highlightColor: activeColor.withOpacity(0.05),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              vertical: AppDimensions.paddingXS,
-              horizontal: AppDimensions.paddingS,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppDimensions.radiusSmall),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppDimensions.paddingMedium,
+          vertical: AppDimensions.paddingSmall,
+        ),
+        decoration: BoxDecoration(
+          color: isActive 
+              ? activeColor.withOpacity(0.1)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppDimensions.radiusSmall),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: currentColor,
+              size: 20,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Icono con animación de escala
-                AnimatedScale(
-                  scale: isActive ? 1.1 : 1.0,
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut,
-                  child: Icon(
-                    icon,
-                    color: currentColor,
-                    size: isLargeScreen ? 26 : 24,
-                  ),
-                ),
-                
-                SizedBox(height: AppDimensions.spacingXS),
-                
-                // Etiqueta con animación de color
-                AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 200),
-                  style: TextStyle(
-                    color: currentColor,
-                    fontSize: isLargeScreen ? 12 : 10,
-                    fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                    letterSpacing: 0.3,
-                  ),
-                  child: Text(
-                    label,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                
-                // Indicador de estado activo
-                SizedBox(height: 2),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut,
-                  height: 2,
-                  width: isActive ? 20 : 0,
-                  decoration: BoxDecoration(
-                    color: activeColor,
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-              ],
+            SizedBox(width: AppDimensions.spacingSmall),
+            Text(
+              label,
+              style: TextStyle(
+                color: currentColor,
+                fontSize: 14,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

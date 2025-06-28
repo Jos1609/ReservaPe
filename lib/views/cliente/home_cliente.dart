@@ -13,12 +13,36 @@ class CompaniesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 768;
     return ChangeNotifierProvider(
       create: (_) => CompaniesController(FirestoreService()),
       child: Consumer<CompaniesController>(
         builder: (context, controller, _) {
           return Scaffold(
             backgroundColor: AppColors.light,
+            // AppBar solo para desktop
+            appBar: isDesktop
+                ? PreferredSize(
+                    preferredSize: const Size.fromHeight(70),
+                    child: CustomBottomNavBar(
+                      currentIndex: 0,
+                      onTap: (index) {
+                        switch (index) {
+                          case 0:
+                            // Ya estás en la pantalla principal
+                            break;
+                          case 1:
+                            Navigator.pushReplacementNamed(
+                                context, '/historial_reservas');
+                            break;
+                          case 2:
+                            Navigator.pushReplacementNamed(context, '/profile');
+                            break;
+                        }
+                      },
+                    ),
+                  )
+                : null,
             body: SafeArea(
               child: CustomScrollView(
                 physics: BouncingScrollPhysics(),
@@ -293,26 +317,26 @@ class CompaniesPage extends StatelessWidget {
                 ],
               ),
             ),
-            bottomNavigationBar: CustomBottomNavBar(
-              currentIndex:
-                  0, // Esta pantalla de empresas sería "Inicio" del módulo
-              onTap: (index) {
-                switch (index) {
-                  case 0:
-                    // Ya estás en la pantalla principal del módulo (empresas)
-                    break;
-                  case 1:
-                    // Navegar al historial de este módulo específico
-                    Navigator.pushReplacementNamed(
-                        context, '/historial_reservas');
-                    break;
-                  case 2:
-                    // Navegar al perfil
-                    Navigator.pushReplacementNamed(context, '/profile');
-                    break;
-                }
-              },
-            ),
+            // BottomNavigationBar solo para móvil
+            bottomNavigationBar: !isDesktop
+                ? CustomBottomNavBar(
+                    currentIndex: 0,
+                    onTap: (index) {
+                      switch (index) {
+                        case 0:
+                          // Ya estás en la pantalla principal
+                          break;
+                        case 1:
+                          Navigator.pushReplacementNamed(
+                              context, '/historial_reservas');
+                          break;
+                        case 2:
+                          Navigator.pushReplacementNamed(context, '/profile');
+                          break;
+                      }
+                    },
+                  )
+                : null,
           );
         },
       ),
